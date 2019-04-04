@@ -57,7 +57,7 @@ class _MyComponent extends React.Component<MyProps, MyStates> {
     this.state = { count: 99 };
   }
 
-  componentWillReceiveprops(nextProps){
+  componentWillReceiveProps( nextProps ){
     console.log("in willReceiveprops", nextProps);
   }
   
