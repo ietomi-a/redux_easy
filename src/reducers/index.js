@@ -1,5 +1,7 @@
 import { combineReducers } from 'redux'
 import todos from './todos'
+import myComp from './MyComp'
 
-const todoApp = combineReducers( { todos } );
-export default todoApp
+const reducers = combineReducers( { todos, myComp } );
+//const reducers = combineReducers( { todos} );
+export default reducers

@@ -8,6 +8,8 @@ import rootReducer from '../reducers';
 
 import { addTodo } from "../actions";
 
+import MyComponent from "./MyReduxSample";
+
 // createStore の時点で rootReducer に登録した関数が 1 回動く.
 const store = createStore(rootReducer);
 
@@ -19,13 +21,14 @@ store.dispatch( addTodo('Hello World23333!') );
 
 const App = () => (
   <Provider store={store}>  
-  <div>
-    <div>  hellosagsag </div>
-    <VisibleTodoList />
-    <AddTodo />
-    {/* helloo soeaage */}
-    {/* <Footer /> */}
-  </div>
+    <div>
+      <MyComponent />
+      <div>  hellosagsag </div>
+      <VisibleTodoList />
+      <AddTodo />
+      {/* helloo soeaage */}
+      {/* <Footer /> */}
+    </div>
   </Provider>  
 );
 
