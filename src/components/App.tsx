@@ -11,10 +11,24 @@ import { addTodo } from "../actions";
 
 import MyComponent from "./MyReduxSample";
 
-//console.log("first");
+
+
+// redux のデバッガーを使う場合は以下をコメントアウト.
+// declare global {
+//     interface Window { __REDUX_DEVTOOLS_EXTENSION__: any; }
+// }
+
+// const store = createStore(
+//     rootReducer,
+//     window.__REDUX_DEVTOOLS_EXTENSION__
+//         && window.__REDUX_DEVTOOLS_EXTENSION__()
+// );
+
 
 // createStore の時点で rootReducer に登録した関数が 1 回動く.
-const store = createStore(rootReducer);
+const store = createStore(
+    rootReducer
+);
 
 //console.log("second");
 

@@ -75,7 +75,6 @@ type MyProps = {
 class _MyComponent extends React.Component<MyProps, MyStates> {
   constructor(props){
     super(props);
-
   }
 
   increment( c: number ){
