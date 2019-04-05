@@ -7,8 +7,15 @@ const ASYNC_START = "ASYNC_START";
 const ASYNC_FAIL = "ASYNC_FAIL";
 const ASYNC_FINISH = "ASYNC_FINISH";
 
-function someAsyncFunction() {
-  return "some async start";
+function someAsyncFunction(amount) {
+  console.log('フラ');
+  setTimeout(() => {
+    console.log('イド');
+    setTimeout(() => {
+      console.log('チキーン！');
+    }, 2000);
+  }, 1000);  
+  return amount+119;
 }
 
 class SomeAPIClass {
@@ -22,9 +29,24 @@ class SomeAPIClass {
     //console.log( "in sync, ", this.dispatch );
     this.dispatch( {type: INCREMENT, amount: amount} );
   }
+  
   async asyncSetAmount(amount: number): Promise<void> {
-    this.dispatch( {type: INCREMENT, amount: amount} );
+    this.dispatch({type: ASYNC_START});
+    try {
+      //const result = await someAsyncFunction(amount);
+      const result = someAsyncFunction(amount);      
+      console.log( "in async, oooo " );      
+      this.dispatch({type: INCREMENT, amount: result});
+    } catch (err) {
+      this.dispatch({type: ASYNC_FAIL});
+    } finally {
+      this.dispatch({type: ASYNC_FINISH});
+    }
   }
+  
+  // async asyncSetAmount(amount: number): Promise<void> {
+  //   this.dispatch( {type: INCREMENT, amount: amount} );
+  // }
 };
 
 //   syncIncrement(amount: number) {
@@ -53,12 +75,8 @@ type MyProps = {
 class _MyComponent extends React.Component<MyProps, MyStates> {
   constructor(props){
     super(props);
-    //console.log("in construct,",props);
-  }
 
-  // componentWillReceiveProps(nextProps){
-  //   console.log("in willReceiveprops", nextProps);
-  // }
+  }
 
   increment( c: number ){
     this.props.actions.setAmount( this.props.count + c )
@@ -73,8 +91,7 @@ class _MyComponent extends React.Component<MyProps, MyStates> {
       </div>
     );
   }
-}
-
+};
 
 // myComp をキーとしてデータを取り出す.
 const mapStateToProps = (state, oldProps) => {
