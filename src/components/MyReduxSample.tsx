@@ -7,8 +7,15 @@ const ASYNC_START = "ASYNC_START";
 const ASYNC_FAIL = "ASYNC_FAIL";
 const ASYNC_FINISH = "ASYNC_FINISH";
 
-function someAsyncFunction() {
-  return "some async start";
+function someAsyncFunction(amount) {
+  console.log('フラ');
+  setTimeout(() => {
+    console.log('イド');
+    setTimeout(() => {
+      console.log('チキーン！');
+    }, 2000);
+  }, 1000);  
+  return amount+119;
 }
 
 class SomeAPIClass {
@@ -17,14 +24,29 @@ class SomeAPIClass {
     this.dispatch = dispatch;
   }
 
-  syncIncrement(amount: number) {
-    console.log( "in sync, ", amount );
-    console.log( "in sync, ", this.dispatch );
+  setAmount (amount: number) {
+    //console.log( "in sync, ", amount );
+    //console.log( "in sync, ", this.dispatch );
     this.dispatch( {type: INCREMENT, amount: amount} );
   }
-  async asyncIncrement(amount: number): Promise<void> {
-    this.dispatch( {type: INCREMENT, amount: amount} );
+  
+  async asyncSetAmount(amount: number): Promise<void> {
+    this.dispatch({type: ASYNC_START});
+    try {
+      //const result = await someAsyncFunction(amount);
+      const result = someAsyncFunction(amount);      
+      console.log( "in async, oooo " );      
+      this.dispatch({type: INCREMENT, amount: result});
+    } catch (err) {
+      this.dispatch({type: ASYNC_FAIL});
+    } finally {
+      this.dispatch({type: ASYNC_FINISH});
+    }
   }
+  
+  // async asyncSetAmount(amount: number): Promise<void> {
+  //   this.dispatch( {type: INCREMENT, amount: amount} );
+  // }
 };
 
 //   syncIncrement(amount: number) {
@@ -44,7 +66,7 @@ class SomeAPIClass {
 
 // }
 
-type MyStates = { count: number; };
+type MyStates = {};
 type MyProps = {
   count: number;
   actions: SomeAPIClass;
@@ -53,38 +75,30 @@ type MyProps = {
 class _MyComponent extends React.Component<MyProps, MyStates> {
   constructor(props){
     super(props);
-    console.log("in construct,",props);
-    this.state = { count: 99 };
   }
 
-  componentWillReceiveProps( nextProps ){
-    console.log("in willReceiveprops", nextProps);
+  increment( c: number ){
+    this.props.actions.setAmount( this.props.count + c )
   }
   
   render() {
     return (
       <div>
-        <p>{`count: ${this.state.count}`}</p>
-        <button onClick={() => this.props.actions.syncIncrement(3)}>Increment 3</button>
-        <button onClick={() => this.props.actions.asyncIncrement(2)}>async Increment 2</button>
+        <p>{`count: ${this.props.count}`}</p>
+        <button onClick={() => this.increment(3)}>Increment 3</button>
+        <button onClick={() => this.props.actions.asyncSetAmount(2)}>async Increment 2</button>
       </div>
     );
   }
-}
-
+};
 
 // myComp をキーとしてデータを取り出す.
-const mapStateToProps = ({myComp}) => {
-  console.log("print by MyreduxSample, state",  myComp );
-  if( myComp ){
-    return { count: myComp.amount };
-  }else{
-    return { count: 0 };
-  }
+const mapStateToProps = (state, oldProps) => {
+  //console.log("print by mapStateToProps, state, oldProps", state, oldProps );
+  return { count: state.myComp.amount };
 };
 
 const mapDispatchToProps = (dispatch: (action: any) => any ) => {
-  console.log("print by MyreduxSample, dispatch", dispatch );
   return {actions: new SomeAPIClass(dispatch) };
 };
 

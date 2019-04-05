@@ -3,7 +3,7 @@ import * as PropTypes from 'prop-types';
 import Todo from './Todo';
 
 const TodoList = ({ todos }) => {
-  console.log( "in TodoList, ", todos );  
+  //console.log( "in TodoList, ", todos );  
   return (
     <ul>
       {todos.map(todo =>
