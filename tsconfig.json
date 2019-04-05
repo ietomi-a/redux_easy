@@ -6,7 +6,7 @@
     "strictPropertyInitialization": true,
     "noImplicitReturns": true,
     "module": "commonjs",
-    "target": "es5",
+    "target": "es6",
     "jsx": "react"
   },
   "include": [
