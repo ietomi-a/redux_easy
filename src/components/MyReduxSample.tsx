@@ -7,15 +7,22 @@ const ASYNC_START = "ASYNC_START";
 const ASYNC_FAIL = "ASYNC_FAIL";
 const ASYNC_FINISH = "ASYNC_FINISH";
 
-function someAsyncFunction(amount) {
-  console.log('フラ');
-  setTimeout(() => {
-    console.log('イド');
-    setTimeout(() => {
-      console.log('チキーン！');
-    }, 2000);
-  }, 1000);  
-  return amount+119;
+//const my_sleep = msec => new Promise(resolve => setTimeout(resolve, msec));
+// function my_sleep( waitMsec:number ) {
+//     var startMsec = new Date();
+ 
+//     //  指定ミリ秒間だけループさせる（CPUは常にビジー状態）
+//     while( new Date().getTime() - startMsec.getTime() < waitMsec );
+// }
+
+//import fetch from "isomorphic-fetch";
+import fetch from 'node-fetch';
+
+async function someAsyncFunction(amount) {
+    const url = "https://httpbin.org/delay/2";
+    const response = await fetch(url);
+    const res = await JSON.stringify(response.json());
+    return amount+119;
 }
 
 class SomeAPIClass {
@@ -31,17 +38,17 @@ class SomeAPIClass {
   }
   
   async asyncSetAmount(amount: number): Promise<void> {
-    this.dispatch({type: ASYNC_START});
-    try {
-      //const result = await someAsyncFunction(amount);
-      const result = someAsyncFunction(amount);      
-      console.log( "in async, oooo " );      
-      this.dispatch({type: INCREMENT, amount: result});
-    } catch (err) {
-      this.dispatch({type: ASYNC_FAIL});
-    } finally {
-      this.dispatch({type: ASYNC_FINISH});
-    }
+      this.dispatch({type: ASYNC_START});
+      try {
+          const value = await someAsyncFunction(amount );
+          this.dispatch({type: INCREMENT, amount: value});
+      } catch (err) {
+          console.log("erroror");
+          this.dispatch({type: ASYNC_FAIL});
+      } finally {
+          console.log("finish");          
+          this.dispatch({type: ASYNC_FINISH});
+      }
   }
   
   // async asyncSetAmount(amount: number): Promise<void> {
@@ -80,7 +87,7 @@ class _MyComponent extends React.Component<MyProps, MyStates> {
   increment( c: number ){
     this.props.actions.setAmount( this.props.count + c )
   }
-  
+
   render() {
     return (
       <div>

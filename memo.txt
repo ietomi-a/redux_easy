@@ -25,3 +25,7 @@ https://qiita.com/uryyyyyyy/items/d8bae6a7fca1c4732696
 4. 「connect に渡す mapStateProps」の呼ばれるタイミング.
 　　props が更新される前のところでよばれる。
 
+
+
+
+async/await記法
